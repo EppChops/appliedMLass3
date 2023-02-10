@@ -61,7 +61,7 @@ model_params = {
               'vect__ngram_range': [(1,2), (1,3), (1,4), (2,3), (2,4)],
               'feature_select__k': randint(1000, 8000),
               'classif__weights': ['uniform', 'distance'],
-              'classif__algorithm': ['ball_tree', 'kd_tree', 'brute'],
+              'classif__n_neighbors': randint(3, 15)
               
 }
 
@@ -69,7 +69,7 @@ model_params = {
 search = RandomizedSearchCV(
   estimator=pipeline,
   param_distributions=model_params, 
-  n_iter=100,
+  n_iter=50,
   cv=10,
   random_state=1,
   n_jobs=-1
