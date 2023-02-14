@@ -70,7 +70,7 @@ model_params = {
 search = RandomizedSearchCV(
   estimator=pipeline,
   param_distributions=model_params, 
-  n_iter=100,
+  n_iter=50,
   cv=10,
   random_state=1,
   n_jobs=-1
@@ -79,10 +79,7 @@ search = RandomizedSearchCV(
 
 search.fit(Xtrain, Ytrain)
 pprint(search.best_estimator_.get_params())
-
-predictions = search.predict(Xtest)
-
-print(accuracy_score(predictions, Ytest))
+print('Best score', search.best_score_)
 
 #feature_scores = f_classif(Xtrain, Ytrain)[0]
 #for score, fname in sorted(zip(feature_scores, vectorizer.get_feature_names()), reverse=True)[:10]:
