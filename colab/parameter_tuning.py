@@ -42,7 +42,7 @@ model_params = {
              # 'classif__learning_rate': ['constant', 'optimal', 'invscaling', 'adaptive'],
              'classif__loss': ['hinge', 'log_loss'],
 #              'classif__eta0': [0.01, 0.001],
-              'classif__alpha': np.linspace(0.00001, 0.1, num=10).tolist()
+              'classif__alpha': np.linspace(0.00001, 0.01, num=10).tolist()
 }
 
 
@@ -62,5 +62,4 @@ print('Best score:', search.best_score_)
 #feature_scores = f_classif(Xtrain, Ytrain)[0]
 #for score, fname in sorted(zip(feature_scores, vectorizer.get_feature_names()), reverse=True)[:10]:
 #    print(fname, score)
-
 
