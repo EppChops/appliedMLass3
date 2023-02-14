@@ -3,11 +3,13 @@ from pprint import pprint
 import pandas as pd
 import numpy as np
 from sklearn.pipeline import Pipeline
+from sklearn.feature_selection import f_classif, chi2, mutual_info_classif
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.linear_model import Perceptron, RidgeClassifier, SGDClassifier
 from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
 from scipy.stats import uniform, randint
 from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import RobustScaler
 
 from sklearn.feature_selection import SelectPercentile
 
@@ -28,16 +30,18 @@ Y = data['Annotation'].apply(to_label)
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, test_size=0.2, random_state=0)
 
 
-steps = [('vect', TfidfVectorizer()), ('feature_select', SelectPercentile()), ('classif', SGDClassifier(n_jobs=-1))]
+steps = [('vect', TfidfVectorizer()), ('scaler', RobustScaler(with_centering=False)), ('feature_select', SelectPercentile()), ('classif', SGDClassifier(max_iter=100, n_jobs=-1))]
 
 pipeline = Pipeline(steps)
 
 print(pipeline.get_params().keys())
 
 model_params = {
-              'vect__ngram_range': [(1,2), (1,4)],
-              'feature_select__percentile': [75, 80, 85],
-              #'feature_select__score_func': ['f_classif', 'mutual_info_classif', 'chi2'],
+              'vect__ngram_range': [(1,2), (1,1)],
+              'vect__max_df': [0.75, 0.8, 0.85],
+              'vect__strip_accents': ['unicode'],
+              'feature_select__percentile': [80, 85],
+              #'feature_select__score_func': [f_classif, chi2],
               'classif__penalty': ['l2'],
              # 'classif__learning_rate': ['constant', 'optimal', 'invscaling', 'adaptive'],
              'classif__loss': ['hinge', 'log_loss'],
