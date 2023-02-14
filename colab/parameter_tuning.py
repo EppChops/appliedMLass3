@@ -35,14 +35,14 @@ pipeline = Pipeline(steps)
 print(pipeline.get_params().keys())
 
 model_params = {
-              'vect__ngram_range': [(1,2), (2,3)],
-              'feature_select__percentile': [25, 30, 40],
+              'vect__ngram_range': [(1,2), (1,4)],
+              'feature_select__percentile': [75, 80, 85],
               #'feature_select__score_func': ['f_classif', 'mutual_info_classif', 'chi2'],
               'classif__penalty': ['l2'],
              # 'classif__learning_rate': ['constant', 'optimal', 'invscaling', 'adaptive'],
              'classif__loss': ['hinge', 'log_loss'],
 #              'classif__eta0': [0.01, 0.001],
-              'classif__alpha': np.linspace(0.00001, 0.1, num=10).tolist()
+              'classif__alpha': np.linspace(0.1e-08, 0.001, num=10).tolist()
 }
 
 
