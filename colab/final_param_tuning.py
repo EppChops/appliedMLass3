@@ -1,4 +1,3 @@
-import random as r
 from pprint import pprint
 import pandas as pd
 import numpy as np
@@ -14,7 +13,6 @@ from sklearn.preprocessing import RobustScaler
 from sklearn.feature_selection import SelectPercentile
 
 from sklearn.model_selection import train_test_split, cross_val_score
-import re
 
 
 def to_label(y):
@@ -47,7 +45,9 @@ for i, sample in enumerate(data['Annotation']):
     if zeros > ones + negativeones:
         data['Annotation'][i] = 0
     elif ones > zeros + negativeones:
-        data['Annotation']
+        data['Annotation'][i] = 1
+    else:
+        to_drop.append(i)
 
 data = data.drop(axis='index', index=to_drop)
 data.drop_duplicates(subset="Comment")
