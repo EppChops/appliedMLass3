@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.feature_selection import SelectPercentile
-
+from operator import itemgetter
 
 def to_label(y):
     return ['Anti-vaccine', 'Pro-vaccine'][int(y)]
@@ -50,7 +50,7 @@ Y_train = training_data['Annotation'].apply(to_label)
 
 
 steps = [('vect', TfidfVectorizer(max_df=0.75, ngram_range=(1,2), strip_accents='unicode')), 
-         ('feature_select', SelectPercentile(percentile=80)), 
+         #('feature_select', SelectPercentile(percentile=80)), 
          ('classif', SGDClassifier(alpha=0.00011111200000000002, max_iter=400, n_jobs=-1))]
 pipeline = Pipeline(steps)
 
@@ -67,6 +67,16 @@ Y_test = test_data['Annotation'].apply(to_label)
 prediction = pipeline.predict(X_test)
 score = accuracy_score(prediction, Y_test)
 print('Final accuracy score: ', score)
+
+names = pipeline['vect'].get_feature_names_out()
+coefs = pipeline['classif'].coef_[0]
+
+importances = zip(names, coefs)
+sort = sorted(importances, key=itemgetter(1))
+
+print('Highest feature imporance:', sort[len(sort)-10:])
+print('Lowest feature importance:', sort[:10])
+print('Middle feature importance', sort[len(sort)//2 - 5:len(sort)//2 + 5])
 
 cm = confusion_matrix(Y_test, prediction)
 
