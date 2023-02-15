@@ -29,13 +29,25 @@ print(data)
 
 to_drop = []
 for i, sample in enumerate(data['Annotation']):
-    if (re.match('1/0|0/1|-1', str(sample))):
-        to_drop.append(i)
-    else:
-        if (re.match('1+', str(sample))):
-            data['Annotation'][i] = 1
+    annotations = str(sample).split('/')
+    zeros = 0
+    ones = 0
+    negativeones = 0
+    
+    for annotation in annotations:
+        if annotation == '0':
+            zeros += 1
+        elif annotation == '1':
+            ones += 1
+        elif annotation == '-1':
+            negativeones += 1
         else:
-            data['Annotation'][i] = 0
+            raise Exception("Something else slipped by the count")
+    
+    if zeros > ones + negativeones:
+        data['Annotation'][i] = 0
+    elif ones > zeros + negativeones:
+        data['Annotation']
 
 data = data.drop(axis='index', index=to_drop)
 data.drop_duplicates(subset="Comment")
